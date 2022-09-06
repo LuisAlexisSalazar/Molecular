@@ -36,6 +36,7 @@ def create_graph(matrix):
     travel_matrix(matrix, x_start, y_start)
     nx.draw(G, with_labels=True)
     plt.savefig("generador.png")
+    plt.show()
 
 
 # *way: Lista de tuplas de indices
