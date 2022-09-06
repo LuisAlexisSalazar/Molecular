@@ -1,0 +1,10 @@
+Cantidad de alineamientos: 3
+AAAC
+AG-C
+----------
+AAAC
+A-GC
+----------
+AAAC
+-AGC
+----------
