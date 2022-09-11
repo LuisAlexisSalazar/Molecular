@@ -1,0 +1,25 @@
+# Matrix de Valores:
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1
+0 0 0 0 0 0 0 1 2
+0 0 1 1 0 0 0 0 0
+0 0 0 0 2 0 0 0 0
+0 0 1 1 0 1 0 0 0
+0 1 0 0 0 1 2 0 0
+0 1 0 0 0 1 2 1 0
+0 0 0 0 1 0 0 1 0
+0 0 1 1 0 0 0 0 0
+0 1 0 0 0 1 1 0 0
+Maximo Valor (Local) =2
+Cadena 1:GGCTCAATCA
+Cadena 2:ACCTAAGG
+Cantidad de alineamientos: 4
+Alineamientos Local: 
+GG
+----------
+CT
+----------
+CT-A
+----------
+AA
+----------
