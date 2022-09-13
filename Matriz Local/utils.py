@@ -1,7 +1,8 @@
 from itertools import groupby
 
 
-# https://bio.libretexts.org/Bookshelves/Computational_Biology/Book%3A_Computational_Biology_-_Genomes_Networks_and_Evolution_(Kellis_et_al.)/02%3A_Sequence_Alignment_and_Dynamic_Programming/2.05%3A_The_Needleman-Wunsch_Algorithm
+# ?Simulador
+# https://observablehq.com/@manzt/smith-waterman-algorithm
 # Ejemplo 2 valores maximos: STAMMERER FIZZIER
 # Ejemplo Clase: ACGAA AGCGA
 # Ejemplo que da coincidencia con gap: GGCTCAATCA ACCTAAGG

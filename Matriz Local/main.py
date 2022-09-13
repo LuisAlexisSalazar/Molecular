@@ -12,10 +12,3 @@ if __name__ == '__main__':
     MatrixMeddleman.fun(s1, s2)
     MatrixMeddleman.alignments(s1, s2)
     MatrixMeddleman.saveTXT(substring_same=True)
-    # MatrixMeddleman.select_only_same_substring(MatrixMeddleman.values_matrix)
-    # !Paul
-
-    # s1, s2 = "-" + s1, "-" + s2
-    # m, n = len(s2), len(s1)
-    # cadena_comun = seleccionar_cadena2(MatrixMeddleman.values_matrix, n, m, s1)
-    # cadena_comun = cadena_comun[::-1]

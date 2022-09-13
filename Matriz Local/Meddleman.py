@@ -105,9 +105,8 @@ class Matrix:
 
             if matrix_to_mark[x][y] == 1:
                 continue
-            # try:
             matrix_to_mark[x][y] = 1
-            # self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1])
+
             self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1], matrix_to_mark)
             # except:
             #     print("Error:")
