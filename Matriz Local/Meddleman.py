@@ -94,14 +94,29 @@ class Matrix:
             print("Matrix de Coordenadas Inicial:", self.matrix_coordinates, end="\n\n")
             print("N = ", n, "M = ", m)
 
-    def travel_matrix2(self, matrix, Graph, x, y):
+    def travel_matrix2(self, matrix, Graph, x, y, matrix_to_mark=None):
+        # if self.values_matrix[x, y] == 0:
         if self.values_matrix[x, y] == 0:
             self.list_index_end.append((x, y))
             return 0
 
         amount_tuples = len(matrix[x][y])
         for i in range(amount_tuples):
-            self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1])
+
+            if matrix_to_mark[x][y] == 1:
+                continue
+            # try:
+            matrix_to_mark[x][y] = 1
+            # self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1])
+            self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1], matrix_to_mark)
+            # except:
+            #     print("Error:")
+            #     print("x =", x)
+            #     print("y =", y)
+            #     print(self.matrix_coordinates[x][y])
+            #     print(self.matrix_coordinates[50][49])
+            #     print(self.matrix_coordinates[50][48])
+            #     self.travel_matrix2(matrix, Graph, matrix[x][y][i][0], matrix[x][y][i][1])
             Graph.add_edge((x, y), matrix[x][y][i])
 
     def findMaxValue(self):
@@ -128,7 +143,9 @@ class Matrix:
             x_start = index[0]
             y_start = index[1]
             self.list_index_start.append((x_start, y_start))
-            self.travel_matrix2(matrix, G_item, x_start, y_start)
+            matrix_to_mark = np.zeros(shape=self.values_matrix.shape)
+            # self.travel_matrix2(matrix, G_item, x_start, y_start)
+            self.travel_matrix2(matrix, G_item, x_start, y_start, matrix_to_mark)
             if self.plot:
                 nx.draw(G_item, with_labels=True)
                 plt.savefig("generador" + str(index_graph) + ".png")
@@ -191,6 +208,7 @@ class Matrix:
                     print("Mayores valor con sus indices:", list_value_indexs)
         self.findMaxValue()
         # *Generar grafo a travez de la matrix de coordenadas
+        # print(self.matrix_coordinates)
         self.create_graph(self.matrix_coordinates)
         if self.debug:
             print("Matrix de Valores:", self.values_matrix)
@@ -252,7 +270,7 @@ class Matrix:
             index = next_node
         return list_bool
 
-    def saveTXT(self):
+    def saveTXT(self, substring_same=False):
         # np.savetxt('Arreglo de valores.txt', self.values_matrix, fmt='%.0f')
         np.savetxt('output.txt', self.values_matrix, fmt='%.0f', header="Matrix de Valores:")
         f = open("output.txt", "a")
@@ -262,14 +280,48 @@ class Matrix:
         f.write("Cadena 2:" + self.string2 + "\n")
 
         if saveAligments:
-            f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
-            f.write("Alineamientos Local: " + "\n")
+            if substring_same:
+                # f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
+                # f.write("Alineamientos Local: " + "\n")
+                list_substring_same = []
+                for way in self.ways:
 
-            for way in self.ways:
-                print(way)
-                # list_bool = self.get_bool_list(way)
-                # print("Lista diagonal:", list_bool)
-                alignment = self.getAlignmentLocal(way)
-                f.write(alignment + "\n")
-                f.write("-" * 10 + "\n")
-        f.close()
+                    alignment = ""
+                    nex_path = False
+                    len_way = len(way)
+                    for i in range(len_way):
+                        if i == len_way - 1:
+                            break
+                        if self.values_matrix[way[i][0], way[i][1]] < self.values_matrix[way[i + 1][0], way[i + 1][1]]:
+                            nex_path = True
+                            break
+
+                    if nex_path:
+                        continue
+
+                    del way[-1]
+
+                    for x, y in way:
+                        if self.string1[x - 1] == self.string2[y - 1]:
+                            alignment = self.string1[x - 1] + alignment
+
+                    list_substring_same.append(alignment)
+
+                f.write("Cantidad de alineamientos: " + str(len(list_substring_same)) + "\n")
+                f.write("Alineamientos Local: " + "\n")
+                for alig in list_substring_same:
+                    f.write(alig + "\n")
+                    f.write("-" * 10 + "\n")
+                f.close()
+            else:
+                f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
+                f.write("Alineamientos Local: " + "\n")
+
+                for way in self.ways:
+                    print(way)
+                    # list_bool = self.get_bool_list(way)
+                    # print("Lista diagonal:", list_bool)
+                    alignment = self.getAlignmentLocal(way)
+                    f.write(alignment + "\n")
+                    f.write("-" * 10 + "\n")
+                f.close()
