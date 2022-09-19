@@ -15,8 +15,8 @@ def readInput():
 
     string_to_axis_y = (string_to_axis_y[:-1])
     string_to_axis_x = string_to_axis_x
-    if len(string_to_axis_x) > len(string_to_axis_y):
-        string_to_axis_y, string_to_axis_x = string_to_axis_x, string_to_axis_y
+    # if len(string_to_axis_x) > len(string_to_axis_y):
+    #     string_to_axis_y, string_to_axis_x = string_to_axis_x, string_to_axis_y
     print("Cadena 1:", string_to_axis_y)
     print("Cadena 2:", string_to_axis_x)
     return string_to_axis_y, string_to_axis_x

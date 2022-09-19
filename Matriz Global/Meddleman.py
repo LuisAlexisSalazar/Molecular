@@ -34,23 +34,29 @@ def create_graph(matrix):
     x_start = len(matrix) - 1
     y_start = len(matrix[0]) - 1
     travel_matrix(matrix, x_start, y_start)
-    nx.draw(G, with_labels=True)
-    plt.savefig("generador.png")
-    plt.show()
+    # nx.draw(G, with_labels=True)
+    # plt.savefig("generador.png")
+    # plt.show()
 
 
 # *way: Lista de tuplas de indices
 def bool_list(way):
     index = way[0]
     list_bool = []
+    way = way[1::]
 
-    for next_node in way:
+    # list_bool.append(index)
+    for i, next_node in enumerate(way):
+        # if i == len(way) - 1:
+        #     break
         index_diagonal = (index[0] - 1, index[1] - 1)
-        if index_diagonal[0] == next_node[0] and index_diagonal[1] == next_node[1]:
+        # if index_diagonal[0] == next_node[0] and index_diagonal[1] == next_node[1]:
+        if index_diagonal == next_node:
             list_bool.append(1)
         else:
             list_bool.append(0)
         index = next_node
+    # print(len(list_bool))
     return list_bool
 
 
@@ -161,11 +167,21 @@ class Matrix:
 
     def getAlignment(self, list_bool):
         list_bool.reverse()
+        # print("List Bool:", list_bool)
+        # print("Tamaño de la Lista booleana:", len(list_bool))
+        # print("S1 =", self.string1)
+        # print("S2 =", self.string2)
         stringAlignment = ""
         i = 0
         n = 0
-        while i < len(self.string1):
-            if list_bool[i] == 1:
+        print("Lista boleana:", list_bool)
+        max_string = self.string1
+        min_string = self.string2
+        if len(self.string2) > len(self.string1):
+            max_string, min_string = self.string2, self.string1
+
+        while i < len(max_string):
+            if list_bool[i] == 1 or i >= len(min_string):
                 stringAlignment += self.string2[n]
                 n += 1
             else:
@@ -181,8 +197,13 @@ class Matrix:
         f.write("Score: " + str(self.values_matrix[n, m]) + '\n')
         f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
         f.write("Alineamientos: " + "\n")
+        print("Cantidad de Ways: ", len(self.ways))
+        print("Tamaño del Way: ", len(self.ways[0]))
         for i in range(len(self.ways)):
             list_bool_to_alignment = bool_list(self.ways[i])
+            # print("Tamaño de la Lista booleana:", len(list_bool_to_alignment))
+            # print(self.string1)
+            # print(self.string2)
             alignment = self.getAlignment(list_bool_to_alignment)
             f.write(self.string1)
             f.write("\n")
