@@ -1,0 +1,23 @@
+Matrix de Score:
+
+    S0  S1  S2  S3  S4  Sum
+S0   0   7  -2   0  -3    2
+S1   7   0  -2   0  -4    1
+S2  -2  -2   0   0  -7  -11
+S3   0   0   0   0  -3   -3
+S4  -3  -4  -7  -3   0  -17
+Cadena central: ATTGCCATT
+Indice de la cadena central: 0
+
++Alineaciones con la cadena central:
+ATGGCCATT
+ATC-CAATTTT
+ATCTTC-TT
+ACTGACC--
+
+Alinieación Multiple
+ATTGCCATT--
+ATGGCCATT--
+ATC-CAATTTT
+ATCTTC-TT--
+ACTGACC----
