@@ -175,6 +175,9 @@ class Matrix:
         i = 0
         n = 0
         print("Lista boleana:", list_bool)
+        print("Lista len:", len(list_bool))
+        print("S1:", self.string1)
+        print("S2:", self.string2)
         max_string = self.string1
         min_string = self.string2
         if len(self.string2) > len(self.string1):
@@ -204,8 +207,20 @@ class Matrix:
             # print("Tamaño de la Lista booleana:", len(list_bool_to_alignment))
             # print(self.string1)
             # print(self.string2)
+            print("Lista booleana antes getAligment",list_bool_to_alignment)
+
             alignment = self.getAlignment(list_bool_to_alignment)
-            f.write(self.string1)
+            print("alignment", alignment)
+            if len(list_bool_to_alignment) > len(self.string1):
+                # print(len(list_bool_to_alignment))
+                # print(len(self.string1))
+                amount_gap_to_complete = (len(list_bool_to_alignment) - len(self.string1)) - 1
+                # print(amount_gap_to_complete)
+
+                string1_complete = self.string1 + "-" * amount_gap_to_complete
+                f.write(string1_complete)
+            else:
+                f.write(self.string1)
             f.write("\n")
             f.write(alignment)
             f.write("\n")
