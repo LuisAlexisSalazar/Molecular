@@ -246,10 +246,12 @@ class Matrix:
         self.fun(self.string1, self.string2)
         self.alignments(self.string1, self.string2)
         list_bool_to_alignment = bool_list(self.ways[0])
-        # print("Cantidad de Caminos:", len(self.ways))
-        # print("list_bool_to_alignment antes del get:", list_bool_to_alignment)
+        print("Cantidad de Caminos:", len(self.ways))
+        print("list_bool_to_alignment antes del get:", list_bool_to_alignment)
         alignment = self.getAlignment(list_bool_to_alignment)
-
+        print(self.string1)
+        print(alignment)
+        print("*" * 10)
         # print("Alineamientos:")
         # for i in range(len(self.ways)):
         #     list_bool_to_alignment = bool_list(self.ways[i])

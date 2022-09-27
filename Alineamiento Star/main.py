@@ -64,7 +64,8 @@ def MatrixScoreAllString(list_inputs):
             matrix_alignments[i][j] = MatrixGlobal.getFistAlignment()
 
             MatrixGlobalMirror = Matrix(s2, s1)
-            matrix_alignments[j][i] = MatrixGlobalMirror.getFistAlignment()
+            # matrix_alignments[j][i] = MatrixGlobalMirror.getFistAlignment()
+            matrix_alignments[j][i] = matrix_alignments[i][j]
 
             matrix_MatrixGlobal[i][j] = MatrixGlobal
             matrix_MatrixGlobal[j][i] = MatrixGlobalMirror
@@ -72,7 +73,7 @@ def MatrixScoreAllString(list_inputs):
             matrix_score[j][i] = matrix_score[i][j]
             # print(matrix_alignments[j][i])
             # print("-" * 10)
-        # print("+" * 10)
+        print("+" * 10)
     print(matrix_alignments)
     df = pd.DataFrame(data=matrix_score, columns=colums_header, index=colums_header)
     df['Sum'] = df.sum(axis=1)

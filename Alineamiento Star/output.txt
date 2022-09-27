@@ -9,7 +9,7 @@ S4  -3  -4  -7  -3   0  -17
 Cadena central: ATTGCCATT
 Indice de la cadena central: 0
 
-+Alineaciones con la cadena central:
+Alineaciones con la cadena central:
 ATGGCCATT
 ATC-CAATTTT
 ATCTTC-TT
