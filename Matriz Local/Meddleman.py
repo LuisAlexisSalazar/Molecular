@@ -185,18 +185,15 @@ class Matrix:
                 sorted_values_conditions = sorted(values_matrix, key=lambda x: x.value)
                 # ?Reverse no retorna nada solo actualiza los indices
                 sorted_values_conditions.reverse()
-                list_value_indexs = None
+                list_value_indexes = None
                 if sorted_values_conditions[0].value == 0:
-                    list_value_indexs = [()]
-                    # print("Valor 0")
-                else:
-                    # *Filtrar
-                    # print("Valor mayor a 0")
+                    list_value_indexes = [()]
+                else:  # Diferente de 0
                     sorted_values_conditions = KeepWay(sorted_values_conditions)
-                    list_value_indexs = [classValue.index for classValue in sorted_values_conditions]
+                    list_value_indexes = [classValue.index for classValue in sorted_values_conditions]
 
                 # ------Agregar a la matrix de valores y coordenadas-----
-                self.matrix_coordinates[i].append(list_value_indexs)
+                self.matrix_coordinates[i].append(list_value_indexes)
                 self.values_matrix[i][j] = sorted_values_conditions[0].value
 
                 # -------Debug--------
@@ -204,7 +201,7 @@ class Matrix:
                     print("-" * 7, i, "-", j, "-" * 7)
                     print("Valores ordenados de mayor a menor:")
                     [print(classValue.__str__(), end=" ") for classValue in sorted_values_conditions]
-                    print("Mayores valor con sus indices:", list_value_indexs)
+                    print("Mayores valor con sus indices:", list_value_indexes)
         self.findMaxValue()
         # *Generar grafo a travez de la matrix de coordenadas
         # print(self.matrix_coordinates)
@@ -283,6 +280,7 @@ class Matrix:
                 # f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
                 # f.write("Alineamientos Local: " + "\n")
                 list_substring_same = []
+                print("Ways:", self.ways)
                 for way in self.ways:
 
                     alignment = ""

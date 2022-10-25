@@ -1,8 +1,8 @@
 import numpy as np
-from treelib import Node, Tree
-import graphviz
+# from treelib import Node, Tree
+# import graphviz
 import networkx as nx
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from utils import KeepWay
 
 G = nx.DiGraph()
@@ -100,10 +100,12 @@ class Matrix:
     ways = []
     string1 = None
     string2 = None
+    backtracking = False
 
-    def __init__(self, string1, string2, debug=False):
+    def __init__(self, string1, string2, debug=False, backtracking=False):
         self.string1 = string1
         self.string2 = string2
+        self.backtracking = backtracking
         # ? el +1  es por simular el añadido de al inicio "-"
         n, m = len(string1) + 1, len(string2) + 1
         self.debug = debug
@@ -182,15 +184,15 @@ class Matrix:
                     [print(classValue.__str__(), end=" ") for classValue in sorted_values_conditions]
                     print("Mayores valor con sus indices:", list_value_indexs)
         # *Generar grafo a travez de la matrix de coordenadas
-        # create_graph(self.matrix_coordinates)
-        get_one_path(matrix=self.matrix_coordinates)
+        if self.backtracking:
+            create_graph(self.matrix_coordinates)
+
         if self.debug:
             print("Matrix de Valores:", self.values_matrix)
             print("Matrix de Coordenadas:", self.matrix_coordinates)
 
     def alignments(self, string1, string2):
-        if len(path_simple) == 0:
-
+        if self.backtracking:
             n, m = len(string1) + 1, len(string2) + 1
 
             for path in nx.all_simple_paths(G, source=(n - 1, m - 1), target=(0, 0)):
@@ -198,50 +200,18 @@ class Matrix:
 
             if self.debug:
                 print("Caminos para las alineaciones:", self.ways)
-
-    def getAlignment(self, list_bool):
-        list_bool.reverse()
-        # print("List Bool:", list_bool)
-        # print("Tamaño de la Lista booleana:", len(list_bool))
-        # print("S1 =", self.string1)
-        # print("S2 =", self.string2)
-        stringAlignment = ""
-        i = 0
-        n = 0
-        print("Lista boleana:", list_bool)
-        print("Lista len:", len(list_bool))
-        print("S1:", self.string1)
-        print("S2:", self.string2)
-        max_string = self.string1
-        min_string = self.string2
-        if len(self.string2) > len(self.string1):
-            max_string, min_string = self.string2, self.string1
-
-        while i < len(max_string):
-            if list_bool[i] == 1 or i >= len(min_string):
-                stringAlignment += self.string2[n]
-                n += 1
-            else:
-                stringAlignment += "-"
-            i += 1
-        return stringAlignment
+        else:
+            get_one_path(matrix=self.matrix_coordinates)
+            if self.debug:
+                print("Camino simple:", path_simple)
 
     def getOneAligment(self):
 
         list_bool_to_alignment = fix_bool_list(path_simple)
-        # print("Len List Booleano:", len(list_bool_to_alignment))
-        # print(list_bool_to_alignment)
-        # print("Len S1:", len(self.string1))
-        # print("Len S2:", len(self.string2))
         alignment = self.getAlignmentFix(list_bool_to_alignment)
         return alignment
 
     def getAlignmentFix(self, list_bool):
-        # list_bool.reverse()
-        # print("List Bool:", list_bool)
-        # print("Tamaño de la Lista booleana:", len(list_bool))
-        # print("S1 =", self.string1)
-        # print("S2 =", self.string2)
         stringAlignment1 = ""
         stringAlignment2 = ""
 
@@ -257,19 +227,31 @@ class Matrix:
                 stringAlignment2 += string2_inverse[k]
                 j += 1
                 k += 1
-                # print("1:", "j=" + str(j) + "   k=" + str(k))
+
             elif bool_way == 2:
                 stringAlignment1 += "-"
                 stringAlignment2 += string2_inverse[k]
                 k += 1
-                # print("2:", "j=" + str(j) + "   k=" + str(k))
+
             elif bool_way == 3:
                 stringAlignment1 += string1_inverse[j]
                 stringAlignment2 += "-"
                 j += 1
-                # print("3:", "j=" + str(j) + "   k=" + str(k))
+
         stringAlignment1, stringAlignment2 = stringAlignment1[::-1], stringAlignment2[::-1]
-        return stringAlignment1, stringAlignment2
+        return [stringAlignment1, stringAlignment2]
+
+    def get_aligments(self):
+        alignments = []
+        if self.backtracking:
+            for i in range(len(self.ways)):
+                list_bool_to_alignment = fix_bool_list(self.ways[i])
+                alignment = self.getAlignmentFix(list_bool_to_alignment)
+                alignments.append(alignment)
+        else:
+            alignment = self.getOneAligment()
+            alignments.append(alignment)
+        return alignments
 
     def saveTXT(self):
         # np.savetxt('Arreglo de valores.txt', self.values_matrix, fmt='%.0f')
@@ -279,22 +261,11 @@ class Matrix:
         f.write("Score: " + str(self.values_matrix[n, m]) + '\n')
         f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
         f.write("Alineamientos: " + "\n")
-        # print("Cantidad de Ways: ", len(self.ways))
-        # print("Tamaño del Way: ", len(self.ways[0]))
-        # print("First Way: ", self.ways[0])
-        if len(path_simple) == 0:
-            for i in range(len(self.ways)):
-                # list_bool_to_alignment = bool_list(self.ways[i])
-                list_bool_to_alignment = fix_bool_list(self.ways[i])
-                alignment = self.getAlignmentFix(list_bool_to_alignment)
 
-                [f.write(alig + "\n") for alig in alignment]
-
-                f.write("-" * 10)
-                f.write("\n")
-        else:
-            print("Unico Camino:")
-            alignment = self.getOneAligment()
-            [f.write(alig + "\n") for alig in alignment]
+        alignments = self.get_aligments()
+        for par_alig in alignments:
+            [f.write(alig + "\n") for alig in par_alig]
+            f.write("-" * 10)
+            f.write("\n")
 
         f.close()
