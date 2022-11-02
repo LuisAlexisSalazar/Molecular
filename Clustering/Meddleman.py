@@ -3,7 +3,7 @@ from treelib import Node, Tree
 import graphviz
 import networkx as nx
 import matplotlib.pyplot as plt
-from utils import KeepWay
+from utils import *
 
 
 class ValueCondition:
@@ -187,3 +187,35 @@ class Matrix:
         alignments = self.getAlignmentFix(list_bool_to_alignment)
         # [print(a) for a in alignments]
         return alignments
+
+
+# ----------------------Generar Matrix de Distancias a partir de strings--------------------
+import pandas as pd
+import numpy as np
+
+colums_header = []
+listNone = []
+paresCaminos = []
+index_center_star = None
+
+
+def MatrixScoreAllString(list_inputs):
+    n_string = len(list_inputs)
+    # *dtype: https://numpy.org/doc/stable/reference/arrays.dtypes.html
+    matrix_distance = np.full(shape=(n_string, n_string), fill_value=0.0, dtype=np.float_)
+    matrix_MatrixGlobal = []
+    matrix_alignments = np.full(shape=(n_string, n_string), fill_value="").tolist()
+    for n in range(len(list_inputs)):
+        matrix_MatrixGlobal.append(listNone)
+
+    for i in range(n_string):
+        for j in range(n_string):
+            if i != j:
+                s1, s2 = list_inputs[i], list_inputs[j]
+                MatrixGlobal = Matrix(s1, s2)
+                MatrixGlobal.fun(s1, s2)
+                matrix_MatrixGlobal[i][j] = MatrixGlobal
+                matrix_alignments[i][j] = MatrixGlobal.getOneAligment()
+                distance = generateDistance(matrix_alignments[i][j][0], matrix_alignments[i][j][1])
+                matrix_distance[i][j] = distance
+    return matrix_distance

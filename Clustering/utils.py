@@ -1,9 +1,24 @@
 from itertools import groupby
+import numpy as np
 
 
 # https://bio.libretexts.org/Bookshelves/Computational_Biology/Book%3A_Computational_Biology_-_Genomes_Networks_and_Evolution_(Kellis_et_al.)/02%3A_Sequence_Alignment_and_Dynamic_Programming/2.05%3A_The_Needleman-Wunsch_Algorithm
 # Ejemplo del Link: AAGC AGT
 # Ejemplo Clase: AAAC AGC
+# https://stackoverflow.com/questions/7618858/how-to-to-read-a-matrix-from-a-given-file
+def readMatrix(debug=False):
+    with open('data/matrix.txt', 'r') as f:
+        matrix = [[float(num) for num in line.split(',')] for line in f]
+    n = len(matrix[0])
+    matrix = np.array(matrix)
+    matrix = matrix.reshape(n, n)
+    matrix = matrix.astype('float64')
+
+    if debug:
+        print(matrix, end="\n\n")
+
+    return matrix, n
+
 
 def readInputs():
     with open('data/input.txt') as f:
@@ -43,3 +58,85 @@ def KeepWay(values_conditions):
         del values_conditions[1]
         return values_conditions
     return [values_conditions[0]]
+
+
+# ----------------------Generar Matrix de Distancias a partir de strings--------------------
+
+
+# https://stackoverflow.com/questions/31247198/python-pandas-write-content-of-dataframe-into-text-file
+def saveTxt(df):
+    with open('output.txt', mode='w') as file_object:
+        print("Matrix de Score:\n", file=file_object)
+        print(df, file=file_object)
+
+
+def saveStartTXT(center_string, index_center_star, pares_alignment, multiple_alignment):
+    f = open("output.txt", "a")
+    f.write("Cadena central: " + center_string + '\n')
+    f.write("Indice de la cadena central: " + str(index_center_star) + '\n')
+    f.write("\nAlineaciones con la cadena central:\n")
+
+    for i in pares_alignment:
+        f.write(i + "\n")
+
+    f.write("\nAlinieación Multiple\n")
+    for i in multiple_alignment:
+        f.write(i + "\n")
+
+
+def generateDistance(string1, string2):
+    different_positions = 0
+    alignments_positions = 0
+    for c_1, c_2 in zip(string1, string2):
+        if c_1 != "-" and c_2 != "-":
+            alignments_positions += 1
+        elif (c_1 == "-" and c_2 != "-") or (c_1 != "-" and c_2 == "-"):
+            different_positions += 1
+    return different_positions / alignments_positions
+
+
+# https://www.ugr.es/~gallardo/pdf/cluster-3.pdf
+# https://slideplayer.com/slide/14121882/
+# *Estrategias
+def min_distance(distance_1, distance_2):
+    if distance_1 < distance_2:
+        return distance_1
+    return distance_2
+
+
+def max_distance(distance_1, distance_2):
+    if distance_1 > distance_2:
+        return distance_1
+    return distance_2
+
+
+def average_distance(distance_1, distance_2):
+    return (distance_2 + distance_1) / 2
+
+
+dict_strategics = {0: "Distancia Minima", 1: "Distancia Maxima", 2: "Distancia Promedio"}
+
+
+def print_Winner(list_cccs):
+    print("Min distance:", list_cccs[0])
+    print("Max distance:", list_cccs[1])
+    print("Promedio ponderado:", list_cccs[2])
+
+    max_ccc = max(list_cccs)
+    indexes = [i for i, x in enumerate(list_cccs) if x == max_ccc]
+    print("\n\n")
+    if len(indexes) == 1:
+        print("Estrategia Ganador es ", dict_strategics[indexes[0]], " con ", max_ccc)
+    else:
+        print("Empate... Las estrategias")
+        for index in indexes:
+            print(dict_strategics[index])
+        print("Con el valor de ", max_ccc)
+
+    # -----------Lectura de String----------
+    # list_inputs, colums_header = readInputs()
+    # for i in range(len(list_inputs)):
+    #     listNone.append(None)
+    # matrix_distance_from_inputs = MatrixScoreAllString(list_inputs)
+    # cluster = Cluster(debug=False, criterion=min_distance)
+    # cluster.execute(matrix_distance_from_inputs)

@@ -1,20 +1,19 @@
 import numpy as np
 from Meddleman import Matrix
+from utils import min_distance, max_distance, average_distance
 
 """
 Hacer las 3 estrategias maximo,minimo, promedio
 Input sera un matrix de distancias
 Tambien debemos hacer matrix cogenitica para saber cual es mejor 
 
-Quines se unen y en que valor se unen en cada iteracón
+Quienes se unen y en que valor se unen en cada iteracón
 porque esta matrix de congenetica se usan estos valores
 
 Tambien debemos generar la matrix cogenetica
 y el ccc de cada matrix cogenitica de cada estrategica
 24 x 24
 """
-
-VALUE_PROBLEM = 1
 
 
 def generateNewDistanceMatrix(oldDMatrix, index_minor_value, n):
@@ -55,103 +54,165 @@ def generateDistance(string1, string2):
 
 
 class Cluster:
+    path_to_save_debug = "output/"
 
-    def __init__(self, tactic="maximos", list_inputs=[], matrix_distance=[]):
-        # def __int__(self, tactic, list_inputs, matrix_distance):
+    def __init__(self, criterion="Min", list_inputs=[], debug=False):
         self.list_inputs = list_inputs
-        self.tactic = tactic
+        if criterion == "Min":
+            self.criterion = min_distance
+        elif criterion == "Max":
+            self.criterion = max_distance
+        elif criterion == "Avg":
+            self.criterion = average_distance
+        else:
+            raise Exception("Estrategia puesta no encontrada solo hay Min, Max y Avg")
+        self.criterion_str = criterion
+        self.debug = debug
         if len(list_inputs) == 0:
             self.matrix_distance = np.zeros((2, 2))
         else:
             print("Debe haber ingresado una matrix de distancias")
 
-    def generate_matrix_distance(self):
-        listNone = []
+    def getIndexMinValue(self, n, matrix):
+        # *Indices del triangulo superior para obtener el menor valor
+        # https://stackoverflow.com/questions/17368947/generating-indices-using-np-triu-indices
 
-        n_string = len(self.list_inputs)
-        matrix_distance = np.full(shape=(n_string, n_string), fill_value=0.0, dtype=np.float_)
-        matrix_MatrixGlobal = []
-        matrix_alignments = np.full(shape=(n_string, n_string), fill_value="").tolist()
-        n_string_inputs = len(self.list_inputs)
-        for n in range(n_string_inputs):
-            matrix_MatrixGlobal.append(listNone)
+        r, c = np.triu_indices(n, 1)
+        list_indexes = list(zip(r, c))
 
-        for i in range(n_string):
-            for j in range(n_string):
-                if i != j:
-                    s1, s2 = self.list_inputs[i], self.list_inputs[j]
-                    MatrixGlobal = Matrix(s1, s2)
-                    MatrixGlobal.fun(s1, s2)
-                    matrix_MatrixGlobal[i][j] = MatrixGlobal
-                    matrix_alignments[i][j] = MatrixGlobal.getOneAligment()
-                    distance = generateDistance(matrix_alignments[i][j][0], matrix_alignments[i][j][1])
-                    matrix_distance[i][j] = distance
-        self.matrix_distance = matrix_distance
+        list_values = [matrix[i, j] for [i, j] in list_indexes]
 
-    # def aglomerativa(self, old_distance_matrix, n, list_inputs):
-    def aglomerativa(self, old_distance_matrix):
-        # neighbotJoining(self.matrix_distance, n_string, colums_header)
-        # if n == 2:
-        if False:
-            print("La matrix ya esta reducido")
-        else:
-            # ? ---------------Ejemplo del PDF---------------
-            # temp_list = [[0, 3, 4, 7, 2], [3, 0, 1, 2, 5], [4, 1, 0, 6, 9], [7, 2, 6, 0, 8], [2, 5, 9, 8, 0]]
-            # old_distance_matrix = np.array(temp_list)
-            # old_distance_matrix = old_distance_matrix.reshape(5, 5)
-            # old_distance_matrix = np.round(old_distance_matrix, decimals=1)
-            # old_distance_matrix = old_distance_matrix.astype('float64')
-            # ? ----------------------------------------------------------
-            # print("D del inicio =  \n", old_distance_matrix)
-            # new_matrix_D = np.full(shape=(n - 1, n - 1), fill_value=0.0, dtype=np.float_)
-            new_matrix_D = old_distance_matrix
-            n_veces_reducidas = 0
-            while new_matrix_D.shape[0] != 2:
-                # matrix_with_sum = getMatrixWithSum(old_distance_matrix)
-                print(old_distance_matrix, end="\n\n")
-                matrix_tria_Upper = np.triu(old_distance_matrix, 1)
-                print(matrix_tria_Upper)
-                # result = np.where(old_distance_matrix == np.amin(old_distance_matrix))
-                # listOfCordinates = list(zip(result[0], result[1]))
-                # f.write("\nMatrix D con la columna de sumatoria\n")
-                # for line in matrix_with_sum:
-                #     f.write("%s \n" % line)
+        # min_value = list_values.min()
+        index_min_value = np.argmin(list_values)
+        minorValue = matrix[list_indexes[index_min_value]]
+        if self.debug:
+            with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "a") as f:
+                f.write("\nMenor Valor:\n")
+                f.write(str(minorValue))
+                f.write("\nIndices del menor Valor en la Matriz: \n")
+                f.write(str(list_indexes[index_min_value]))
 
-                # print("Resultado:", listOfCordinates)
-                break
-                # * Q =
-            #     distance_promedia = generateQ(matrix_with_sum, n)
-            #     f.write("Matrix Q\n")
-            #     for line in distance_promedia:
-            #         f.write("%s \n" % line)
-            #     # print("Q = \n", distance_promedia)
-            #     index_minor_value = getIndexMinorValue(distance_promedia, n)
-            #     print("Unión de los string:", list_inputs[index_minor_value[0]], " ",
-            #           list_inputs[index_minor_value[1]])
-            #     f.write("Menor valor:" + str(distance_promedia[index_minor_value]) + "\n")
-            #     f.write("Indice del menor valor:" + str(index_minor_value) + "\n")
-            #     f.write(
-            #         "String a unirse:" + list_inputs[index_minor_value[0]] + "\t" + list_inputs[
-            #             index_minor_value[1]] + "\n")
-            #
-            #     NewElement = list_inputs[index_minor_value[0]] + list_inputs[index_minor_value[1]]
-            #     elements_to_remove = [list_inputs[index_minor_value[0]], list_inputs[index_minor_value[1]]]
-            #     list_inputs = [e for e in list_inputs if e not in elements_to_remove]
-            #     list_inputs.insert(index_minor_value[0], NewElement)
-            #     print("Nuevos strings:", list_inputs)
-            #     f.write("Nuevos strings:\n")
-            #     for line in list_inputs:
-            #         f.write("%s \t" % line)
-            #
-            #     # *New matrix D =
-            #     new_matrix_D = generateNewDistanceMatrix(old_distance_matrix, index_minor_value, n)
-            #     old_distance_matrix = new_matrix_D
-            #     # print("Nueva D =  \n", new_matrix_D)
-            #     n = n - 1
-            #     n_veces_reducidas += 1
-            #     f.write("\n\n")
-            #     f.write("\nMatrix D\n")
-            #
-            # print("Ultima Matrix de Distancia\n", old_distance_matrix)
-            # for line in old_distance_matrix:
-            #     f.write("%s \n" % line)
+        return list(list_indexes[index_min_value]), minorValue
+
+    def getNewRow(self, old_matrix, index_min):
+        # *Obtener las filas que se uniran
+        row_1_delete = old_matrix[index_min[0]]
+        row_2_delete = old_matrix[index_min[1]]
+        # *Eliminar columnas los elementos a unirse
+        row_1_delete = np.delete(row_1_delete, index_min)
+        row_2_delete = np.delete(row_2_delete, index_min)
+        new_row = []
+        for dist_1, dist_2 in zip(row_1_delete, row_2_delete):
+            new_row.append(self.criterion(dist_1, dist_2))
+        return new_row
+
+    def getNewMatrix(self, old_distance_matrix, index_min):
+        # *Eliminar las fila y columnas que se uniran
+        new_distance_matrix = np.delete(old_distance_matrix, index_min, axis=0)
+        new_distance_matrix = np.delete(new_distance_matrix, index_min, axis=1)
+
+        new_row = self.getNewRow(old_distance_matrix, index_min)
+        # *Agregar Columna
+        new_distance_matrix = np.append(new_distance_matrix, [new_row], axis=0)
+        # *Agregar Fila
+        new_row.append(0)
+        # https://stackoverflow.com/questions/5954603/transposing-a-1d-numpy-array
+        new_row = np.array([new_row])
+        new_row = new_row.reshape((-1, 1))
+        new_distance_matrix = np.append(new_distance_matrix, new_row, axis=1)
+
+        return new_distance_matrix
+
+    def execute(self, old_distance_matrix):
+
+        if self.debug:
+            with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "w") as f:
+                np.savetxt(f, old_distance_matrix, fmt='%1.2f')
+
+        indexes_per_iterations = []
+        minorValue_per_iterations = []
+        while old_distance_matrix.shape[0] != 2:
+            # https://stackoverflow.com/questions/47314754/how-to-get-triangle-upper-matrix-without-the-diagonal-using-numpy
+
+            n = old_distance_matrix.shape[0]
+
+            # -----------------Obtener el indice del menor valor-----------
+            index_min, minorValue = self.getIndexMinValue(n, old_distance_matrix)
+            indexes_per_iterations.append(index_min)
+            minorValue_per_iterations.append(minorValue)
+
+            # -----------------Generar nueva fila y columna-----------
+            new_distance_matrix = self.getNewMatrix(old_distance_matrix, index_min)
+            # *Actualizar el valor
+            old_distance_matrix = new_distance_matrix
+            if self.debug:
+                with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "a") as f:
+                    f.write("\nMatrix Reducida:\n")
+                    np.savetxt(f, old_distance_matrix, fmt='%1.2f')
+            # ?Agregar los indices y valores cuando la matrix tieene forma 2x2
+        minorValue_per_iterations.append(new_distance_matrix[0, 1])
+        indexes_per_iterations.append([0, 1])
+        return indexes_per_iterations, minorValue_per_iterations
+
+    def getMatrixCofenetica(self, original_matrix, indexes_per_iterations, minorValue_per_iterations):
+
+        matrixCofenetica = np.zeros(original_matrix.shape)
+
+        list_index = [x for x in range(len(original_matrix[0]))]
+        # print(list_index)
+        # print(indexes_per_iterations)
+        # print(minorValue_per_iterations)
+
+        for index_ite, minorValue_ite in zip(indexes_per_iterations, minorValue_per_iterations):
+            new_group_index = []
+            temp_new_group_index = []
+            new_list_index = []
+            for i, index in enumerate(list_index):
+                if i in index_ite:
+                    if type(index) == list:
+                        for item in index:
+                            new_group_index.append(item)
+                    else:
+                        new_group_index.append(index)
+                    # temp_new_group_index.append(index) #Funca
+                    if type(index) == list:
+                        temp_new_group_index.append(index)
+                    else:
+                        temp_new_group_index.append([index])
+                else:
+                    new_list_index.append(index)
+            new_list_index.append(new_group_index)
+            list_index = new_list_index
+
+            # *Rellenar la Matrix Cofenetica
+            # print("Temp Group:", temp_new_group_index)
+            for group_1 in temp_new_group_index[0]:
+                for group_2 in temp_new_group_index[1]:
+                    matrixCofenetica[group_1][group_2] = minorValue_ite
+                    matrixCofenetica[group_2][group_1] = minorValue_ite
+        return matrixCofenetica
+
+
+# ?Si ingresamos entradas como string
+def generate_matrix_distance(self):
+    listNone = []
+
+    n_string = len(self.list_inputs)
+    matrix_distance = np.full(shape=(n_string, n_string), fill_value=0.0, dtype=np.float_)
+    matrix_MatrixGlobal = []
+    matrix_alignments = np.full(shape=(n_string, n_string), fill_value="").tolist()
+    n_string_inputs = len(self.list_inputs)
+    for n in range(n_string_inputs):
+        matrix_MatrixGlobal.append(listNone)
+
+    for i in range(n_string):
+        for j in range(n_string):
+            if i != j:
+                s1, s2 = self.list_inputs[i], self.list_inputs[j]
+                MatrixGlobal = Matrix(s1, s2)
+                MatrixGlobal.fun(s1, s2)
+                matrix_MatrixGlobal[i][j] = MatrixGlobal
+                matrix_alignments[i][j] = MatrixGlobal.getOneAligment()
+                distance = generateDistance(matrix_alignments[i][j][0], matrix_alignments[i][j][1])
+                matrix_distance[i][j] = distance
+    return matrix_distance

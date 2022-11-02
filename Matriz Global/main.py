@@ -10,4 +10,5 @@ if __name__ == '__main__':
     MatrixMeddleman.fun(s1, s2)
     MatrixMeddleman.alignments(s1, s2)
     list_per_alignments = MatrixMeddleman.get_aligments()
+    print(list_per_alignments)
     # MatrixMeddleman.saveTXT()
