@@ -6,6 +6,14 @@ import numpy as np
 list_cccs = []
 
 
+def generateRandMatrix(n=10):
+    matrix = np.random.randint(low=1, high=60, size=(n, n))
+    matrix = np.tril(matrix) + np.tril(matrix, -1).T
+    di = np.diag_indices(n)
+    matrix[di] = 0
+    return matrix
+
+
 # *cophenetic correlation coefficients
 def getCopheCorreCoe(matrix, matrixCofenetica, n):
     r, c = np.triu_indices(n, 1)
@@ -23,6 +31,7 @@ def getCopheCorreCoe(matrix, matrixCofenetica, n):
 
 
 DEBUG = True
+MATRIX_TXT = True
 cluster = [Cluster(debug=DEBUG, criterion="Min"),
            Cluster(debug=DEBUG, criterion="Max"),
            Cluster(debug=DEBUG, criterion="Avg")]
@@ -30,7 +39,13 @@ cluster = [Cluster(debug=DEBUG, criterion="Min"),
 # ?Link del simulador del algoritmo de Meddleman
 # https://bioboot.github.io/bimm143_W20/class-material/nw/
 if __name__ == '__main__':
-    matrix, n = readMatrix(True)
+    if MATRIX_TXT:
+        # *Read TXT Ejemplo de PDF
+        matrix, n = readMatrix(True)
+    else:
+        # *Random matrix
+        n = 50
+        matrix = generateRandMatrix(n)
 
     for c in cluster:
         indexes_per_iterations, minorValue_per_iterations = c.execute(matrix)
