@@ -30,6 +30,7 @@ def getCopheCorreCoe(matrix, matrixCofenetica, n):
     # ccc = pearsonr(triangle_matrix, triangle_matrixCofenetica).statistic
 
 
+# 4,8,16, 24
 DEBUG = True
 MATRIX_TXT = True
 cluster = [Cluster(debug=DEBUG, criterion="Min"),
@@ -39,17 +40,23 @@ cluster = [Cluster(debug=DEBUG, criterion="Min"),
 # ?Link del simulador del algoritmo de Meddleman
 # https://bioboot.github.io/bimm143_W20/class-material/nw/
 if __name__ == '__main__':
-    if MATRIX_TXT:
-        # *Read TXT Ejemplo de PDF
-        matrix, n = readMatrix(True)
-    else:
-        # *Random matrix
-        n = 50
-        matrix = generateRandMatrix(n)
-
+    n = 24
+    matrix = readMatrix(n, True)
+    # if MATRIX_TXT:
+    #     # *Read TXT Ejemplo de PDF
+    #     matrix, n = readMatrix(True)
+    # else:
+    #     # *Random matrix
+    #     n = 50
+    #     matrix = generateRandMatrix(n)
+    #
     for c in cluster:
         indexes_per_iterations, minorValue_per_iterations = c.execute(matrix)
         matrixCofenetica = c.getMatrixCofenetica(matrix, indexes_per_iterations, minorValue_per_iterations)
+        # print(matrixCofenetica)
         getCopheCorreCoe(matrix, matrixCofenetica, n)
+        with open(c.path_to_save_debug + "iteration" + c.criterion_str + ".txt", "a") as f:
+            f.write("\nMatrix cofenetica de " + c.criterion_str + "\n")
+            np.savetxt(f, matrixCofenetica, fmt='%1.6f')
 
     print_Winner(list_cccs)

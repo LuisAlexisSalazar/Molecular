@@ -6,18 +6,35 @@ import numpy as np
 # Ejemplo del Link: AAGC AGT
 # Ejemplo Clase: AAAC AGC
 # https://stackoverflow.com/questions/7618858/how-to-to-read-a-matrix-from-a-given-file
-def readMatrix(debug=False):
-    with open('data/matrix.txt', 'r') as f:
-        matrix = [[float(num) for num in line.split(',')] for line in f]
-    n = len(matrix[0])
-    matrix = np.array(matrix)
-    matrix = matrix.reshape(n, n)
-    matrix = matrix.astype('float64')
+def readMatrix(n, debug=False):
+    # with open('data/matrix.txt', 'r') as f:
+    #     matrix = [[float(num) for num in line.split(',')] for line in f]
+    # n = len(matrix[0])
+    # matrix = np.array(matrix)
+    # matrix = matrix.reshape(n, n)
+    # matrix = matrix.astype('float64')
+    #
+    # if debug:
+    #     print(matrix, end="\n\n")
+    #
+    import pandas as pd
 
+    df = pd.read_csv('data/matrix.csv', sep=";", header=None)
+    # print(df)
+    matrix = df.to_numpy()
+    # print(matrix)
+    # print(matrix.shape)
+
+    matrix = np.delete(matrix, range(n, 24), 0)
+    matrix = np.delete(matrix, range(n, 24), 1)
     if debug:
         print(matrix, end="\n\n")
 
-    return matrix, n
+    # print(matrix.shape)
+
+    # print(df)
+
+    return matrix
 
 
 def readInputs():
@@ -118,25 +135,28 @@ dict_strategics = {0: "Distancia Minima", 1: "Distancia Maxima", 2: "Distancia P
 
 
 def print_Winner(list_cccs):
-    print("Min distance:", list_cccs[0])
-    print("Max distance:", list_cccs[1])
-    print("Promedio ponderado:", list_cccs[2])
+    file = "output/result.txt"
+    with open(file, "w") as f:
+        f.write("Min distance:\n")
+        np.savetxt(f, [list_cccs[0]], fmt='%1.6f')
+        f.write("Max distance:\n")
+        np.savetxt(f, [list_cccs[1]], fmt='%1.6f')
+        f.write("Promedio ponderado:\n")
+        np.savetxt(f, [list_cccs[2]], fmt='%1.6f')
 
-    max_ccc = max(list_cccs)
-    indexes = [i for i, x in enumerate(list_cccs) if x == max_ccc]
-    print("\n\n")
-    if len(indexes) == 1:
-        print("Estrategia Ganador es ", dict_strategics[indexes[0]], " con ", max_ccc)
-    else:
-        print("Empate... Las estrategias")
-        for index in indexes:
-            print(dict_strategics[index])
-        print("Con el valor de ", max_ccc)
-
-    # -----------Lectura de String----------
-    # list_inputs, colums_header = readInputs()
-    # for i in range(len(list_inputs)):
-    #     listNone.append(None)
-    # matrix_distance_from_inputs = MatrixScoreAllString(list_inputs)
-    # cluster = Cluster(debug=False, criterion=min_distance)
-    # cluster.execute(matrix_distance_from_inputs)
+        max_ccc = max(list_cccs)
+        indexes = [i for i, x in enumerate(list_cccs) if x == max_ccc]
+        print("\n\n")
+        if len(indexes) == 1:
+            # print("Estrategia Ganador es ", dict_strategics[indexes[0]], " con ", max_ccc)
+            f.write("Estrategia Ganador es " + dict_strategics[indexes[0]] + "\n")
+            np.savetxt(f, [max_ccc], fmt='%1.6f')
+        else:
+            # print("Empate... Las estrategias")
+            f.write("\nEmpate... Las estrategias ")
+            for index in indexes:
+                # print(dict_strategics[index])
+                f.write(dict_strategics[index] + " ")
+            # print("Con el valor de ", max_ccc)
+            f.write("\nCon el valor de:\n")
+            np.savetxt(f, [max_ccc], fmt='%1.6f')

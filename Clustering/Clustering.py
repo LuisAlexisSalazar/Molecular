@@ -124,10 +124,11 @@ class Cluster:
         return new_distance_matrix
 
     def execute(self, old_distance_matrix):
-
         if self.debug:
             with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "w") as f:
-                np.savetxt(f, old_distance_matrix, fmt='%1.2f')
+                f.write(self.criterion_str)
+                # with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "w") as f:
+                # np.savetxt(f, old_distance_matrix, fmt='%1.2f')
 
         indexes_per_iterations = []
         minorValue_per_iterations = []
@@ -145,10 +146,10 @@ class Cluster:
             new_distance_matrix = self.getNewMatrix(old_distance_matrix, index_min)
             # *Actualizar el valor
             old_distance_matrix = new_distance_matrix
-            if self.debug:
-                with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "a") as f:
-                    f.write("\nMatrix Reducida:\n")
-                    np.savetxt(f, old_distance_matrix, fmt='%1.2f')
+            # if self.debug:
+            #     with open(self.path_to_save_debug + "iteration" + self.criterion_str + ".txt", "a") as f:
+            #         f.write("\nMatrix Reducida:\n")
+            #         np.savetxt(f, old_distance_matrix, fmt='%1.2f')
             # ?Agregar los indices y valores cuando la matrix tieene forma 2x2
         minorValue_per_iterations.append(new_distance_matrix[0, 1])
         indexes_per_iterations.append([0, 1])
