@@ -1,0 +1,56 @@
+Avg
+Menor Valor:
+18.047724
+Indices del menor Valor en la Matriz:
+(0, 2)
+Menor Valor:
+24.691644
+Indices del menor Valor en la Matriz:
+(0, 1)
+Matrix cofenetica de Avg
+0.000000 32.916834 18.047724 32.916834
+32.916834 0.000000 32.916834 24.691644
+18.047724 32.916834 0.000000 32.916834
+32.916834 24.691644 32.916834 0.000000
+
+
+Max
+Menor Valor:
+18.047724
+Indices del menor Valor en la Matriz:
+(0, 2)
+Menor Valor:
+24.691644
+Indices del menor Valor en la Matriz:
+(0, 1)
+Matrix cofenetica de Max
+0.000000 41.621436 18.047724 41.621436
+41.621436 0.000000 41.621436 24.691644
+18.047724 41.621436 0.000000 41.621436
+41.621436 24.691644 41.621436 0.000000
+
+
+Min
+Menor Valor:
+18.047724
+Indices del menor Valor en la Matriz:
+(0, 2)
+Menor Valor:
+23.839064
+Indices del menor Valor en la Matriz:
+(1, 2)
+Matrix cofenetica de Min
+0.000000 24.691644 18.047724 23.839064
+24.691644 0.000000 24.691644 24.691644
+18.047724 24.691644 0.000000 23.839064
+23.839064 24.691644 23.839064 0.000000
+
+
+Min distance:
+0.679025
+Max distance:
+0.720828
+Promedio ponderado:
+0.728001
+Estrategia Ganador es Distancia Promedio
+0.728001

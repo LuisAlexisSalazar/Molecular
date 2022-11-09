@@ -1,0 +1,8 @@
+Min distance:
+0.777726
+Max distance:
+0.678776
+Promedio ponderado:
+0.673032
+Estrategia Ganador es Distancia Minima
+0.777726
