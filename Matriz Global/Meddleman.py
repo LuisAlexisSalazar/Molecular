@@ -183,7 +183,7 @@ class Matrix:
                     print("Valores ordenados de mayor a menor:")
                     [print(classValue.__str__(), end=" ") for classValue in sorted_values_conditions]
                     print("Mayores valor con sus indices:", list_value_indexs)
-        # *Generar grafo a travez de la matrix de coordenadas
+        # *Sobrepasa la recursión no usarlo
         if self.backtracking:
             create_graph(self.matrix_coordinates)
 
