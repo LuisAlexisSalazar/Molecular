@@ -2,5 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Alineamiento Star/output.txt" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PrediccionEstructuraSecuencial/output.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/PrediccionEstructuraSecuencial/outputs/2_output.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/PrediccionEstructuraSecuencial/outputs/3_output.txt" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/PrediccionEstructuraSecuencial/outputs/4_output.txt" charset="windows-1252" />
   </component>
 </project>

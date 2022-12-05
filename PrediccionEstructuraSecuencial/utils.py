@@ -9,19 +9,25 @@ def readInput():
     with open('data/input.txt') as f:
         lines = f.readlines()
 
-    string_to_axis_y = lines[0]
-    string_to_axis_x = lines[1]
-
+    string_to_axis_x = lines[0]
+    string_to_axis_x = string_to_axis_x.strip()
+    # string_to_axis_x = lines[1]
+    # string_to_axis_y = string_to_axis_y.replace(" ", "")
+    string_to_axis_x = string_to_axis_x.replace(" ", "")
+    # string_to_axis_y = string_to_axis_y.upper()
+    string_to_axis_x = string_to_axis_x.upper()
     # string_to_axis_y = "-" + (string_to_axis_y[:-1])
     # string_to_axis_x = "-" + string_to_axis_x
-
-    string_to_axis_y = (string_to_axis_y[:-1])
-    string_to_axis_x = string_to_axis_x
+    # print("S P1:",len(string_to_axis_x))
+    # for i,s in enumerate(string_to_axis_x):
+    #     print(i, "c:", s)
+    # string_to_axis_y = (string_to_axis_y[:-1])
+    # string_to_axis_x = string_to_axis_x
     # if len(string_to_axis_x) > len(string_to_axis_y):
     #     string_to_axis_y, string_to_axis_x = string_to_axis_x, string_to_axis_y
-    print("Cadena 1:", string_to_axis_y)
-    print("Cadena 2:", string_to_axis_x)
-    return string_to_axis_y, string_to_axis_x
+    # print("Cadena 1:", string_to_axis_y)
+    # print("Cadena 2:", string_to_axis_x)
+    return string_to_axis_x, string_to_axis_x
 
 
 def all_equal(iterable):

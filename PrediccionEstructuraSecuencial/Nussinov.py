@@ -55,8 +55,8 @@ def fix_bool_list(way):
     index = way[0]
     list_bool = []
     way = way[1::]
+    string_result = []
 
-    # list_bool.append(index)
     for i, next_node in enumerate(way):
         # if i == len(way) - 1:
         #     break
@@ -176,6 +176,7 @@ class Matrix:
         indexes_triangle_lower = list(zip(indexes_triangle_lower[0], indexes_triangle_lower[1]))
         indexes_diagonal = index_long_diagonal(self.n)
         indexes_triangle_lower_withouth_diagn = [x for x in indexes_triangle_lower if x not in indexes_diagonal]
+
         if index in indexes_triangle_lower_withouth_diagn:
             return True
         return False
@@ -191,11 +192,26 @@ class Matrix:
 
     # *Recursivo a bucle
     def travel_matrix_to_one_simple_path(self, matrix, x_index, y_index, indexes_diagonal):
+        print("Triangle inferior:\n")
+        # for index in indexes_triangle_lower_withouth_diagn:
+        #     print(indexes_triangle_lower_withouth_diagn)
+        #
+        while not self.is_over_diag2((x_index, y_index)):
+            print("Index Actual: (", x_index, " , ", y_index, ")")
+            next_directions = matrix[x_index][y_index]
+            if (5, 6) == (x_index, y_index):
+                print("No funca")
+            if len(next_directions) == 0:
+                break
+            else:
+                next_direction = next_directions[0]
+                if self.is_over_diag2(next_direction):
+                    break
+                # if next_direction in indexes_diagonal or next_direction
 
-        while not self.is_over_diag((x_index, y_index)):
-            self.path_simple.append(matrix[x_index][y_index][0])
-            x_index = self.path_simple[-1][0]
-            y_index = self.path_simple[-1][1]
+                self.path_simple.append(next_direction)
+                x_index = next_direction[0]
+                y_index = next_direction[1]
             # print("Paths a escoger:", matrix[x_index][y_index][0])
 
     def create_graph(self, matrix, indexes_start):
@@ -223,8 +239,10 @@ class Matrix:
         y_start = indexes_star[1]
         self.path_simple.append((x_start, y_start))
         indexes_diagonal = index_long_diagonal(self.n)
+        print("Diagonal Grande:", indexes_diagonal)
         self.travel_matrix_to_one_simple_path(matrix, x_start, y_start, indexes_diagonal)
         print("Path Simlpe:", self.path_simple)
+        # return self.path_simple
 
     def getValueComplement(self, letter1, letter2):
         complement_to_letter1 = self.dict_complement.get(letter1)
@@ -236,8 +254,11 @@ class Matrix:
         values = []
         # print("Indices:", i, j)
         for k in range(i + 1, j):
-            # print(self.values_matrix[i, k])
-            # print(self.values_matrix[k + 1, j])
+            if (i, j) == (0, 19):
+                # print("k=",k)
+                print(self.values_matrix[i, k], " - ", self.values_matrix[k + 1, j])
+                # print(i, k)
+                # print(self.values_matrix[k + 1, j])
             values.append(self.values_matrix[i, k] + self.values_matrix[k + 1, j])
         # print("Values:", values)
         minValue = (min(values))
@@ -252,6 +273,8 @@ class Matrix:
             for i, j in diag_index:
                 # ---------Obtener valores de condiciones---------
                 # *Valores en orden de Esquina izquierda, solo Derecha y solo izquierda
+                # if (i,j) == (0,19):
+                #     print("No funca ;V")
                 index_1, index_2, index_3, index_4 = (i + 1, j), (i, j - 1), (i + 1, j - 1), (i, j)
 
                 value_1 = self.values_matrix[i + 1, j]
@@ -347,6 +370,11 @@ class Matrix:
         alignment = self.getAlignmentFix(list_bool_to_alignment)
         return alignment
 
+    def getSecuencePatron(self):
+        list_bool_to_alignment = fix_bool_list(self.path_simple)
+        secuence, code = self.getAlignmentFix(list_bool_to_alignment)
+        return secuence, code
+
     def getOneCode(self):
         code = fix_bool_list(self.path_simple)
         return code
@@ -354,6 +382,8 @@ class Matrix:
     def getAlignmentFix(self, list_bool):
         stringAlignment1 = ""
         stringAlignment2 = ""
+        code_visual_1 = ""
+        code_visual_2 = ""
         # string1_inverse = self.string1[::-1]
         string1_inverse = self.string1
         string2_inverse = self.string2[::-1]
@@ -363,21 +393,26 @@ class Matrix:
             if bool_way == 1:
                 stringAlignment1 += string1_inverse[j]
                 stringAlignment2 += string2_inverse[k]
+                code_visual_2 += "("
+                code_visual_1 += ")"
                 j += 1
                 k += 1
 
             elif bool_way == 2:
-                stringAlignment1 += "-"
+                # stringAlignment1 += "-"
                 stringAlignment2 += string2_inverse[k]
+                code_visual_1 += "."
                 k += 1
 
             elif bool_way == 3:
                 stringAlignment1 += string1_inverse[j]
-                stringAlignment2 += "-"
+                code_visual_2 += "."
+                # stringAlignment2 += "-"
                 j += 1
-
+        code = code_visual_2 + code_visual_1
+        secuence = stringAlignment1 + stringAlignment2
         # stringAlignment1, stringAlignment2 = stringAlignment1[::-1], stringAlignment2[::-1]
-        return [stringAlignment1, stringAlignment2]
+        return secuence, code
 
     def getCodeficate(self):
         codes = []
@@ -402,7 +437,7 @@ class Matrix:
                 alignments.append(alignment)
         else:
             alignment = self.getOneAligment()
-            alignments.append(alignment)
+            # alignments.append(alignment)
         return alignments
 
     def saveTXT(self):
@@ -410,19 +445,23 @@ class Matrix:
         # print(type(self.values_matrix))
         np.savetxt('output.txt', self.values_matrix, fmt='%d', header="Matrix de Valores:", delimiter='\t')
         f = open("output.txt", "a")
-
+        print("Escribiendo")
         n, m = len(self.string1), len(self.string2)
         f.write("Len del Strin1: " + str(n))
-        f.write("Len del Strin2: " + str(m))
         minValue = np.amin(self.values_matrix)
-
-        f.write("Score: " + str(minValue) + '\n')
-        f.write("Cantidad de alineamientos: " + str(len(self.ways)) + "\n")
+        result = np.where(self.values_matrix == minValue)
+        listOfCordinates = list(zip(result[0], result[1]))
+        listOfCordinates = listOfCordinates[0]
+        f.write("\nMinimo Valor: " + str(minValue) + '\n')
+        f.close()
+        return 0
+        f.write(
+            "Una unica alineación desde indice (" + str(listOfCordinates[0]) + "," + str(listOfCordinates[1]) + ')\n')
         f.write("Significado de la codificacion: " + "\n")
         f.write("1:Diagonal \n")
         f.write("2:Izquierda \n")
         f.write("3:Abajo \n\n")
-        f.write("Codificacion: " + "\n")
+        f.write("Codificacion del camino: " + "\n")
         codes = self.getCodeficate()
         for code in codes:
             [f.write(str(c) + ",") for c in code]
